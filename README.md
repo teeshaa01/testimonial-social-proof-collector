@@ -1,129 +1,97 @@
-# Testimonial & Social Proof Collector (MERN Stack)
+# Testimonial & Social Proof Collector
 
-A complete, production-ready MERN stack technical assessment application for creating testimonial collection spaces, gathering verified social proof from clients without requiring account login, moderating reviews with detailed metrics, and generating responsive embed widgets for websites.
+## Project Description
 
----
+This MERN stack technical assessment application allows business owners to create testimonial collection spaces, collect customer feedback, moderate submissions, display approved testimonials, and generate embeddable social-proof widgets.
 
-## Tech Stack
+Implemented workflows include owner authentication, space management, public testimonial collection, moderation, rating metrics, a public Wall of Love, and iframe embed options.
 
-- **Frontend**: React 18, Vite, Tailwind CSS, Coss UI / Radix primitives (`@radix-ui/react-dialog`, `@radix-ui/react-switch`, `@radix-ui/react-tabs`), Lucide Icons, Axios, Canvas-Confetti
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB & Mongoose
-- **Authentication**: Pair-token JWT (15-min access token + 7-day refresh token) stored in secure `httpOnly` cookies with token rotation and reuse detection
-- **Image Pipeline**: Multer multipart upload with Cloudinary support and automatic local disk fallback (`/uploads/`)
+## Technology Stack Used
 
----
+- **Frontend:** React 18, React Router, Vite, Tailwind CSS, Axios, Lucide React, Canvas Confetti, and Radix UI primitives
+- **Backend:** Node.js, Express, CORS, cookie-parser, dotenv, Multer, and Validator
+- **Database:** MongoDB with Mongoose
+- **Authentication:** JWT access and refresh tokens in HTTP-only cookies with bcryptjs password hashing
+- **Image storage:** Local disk storage with optional Cloudinary integration
+- **Build tooling:** PostCSS, Autoprefixer, and Tailwind CSS
 
-## Assessment Requirements Implemented
+## How to Install Dependencies
 
-1. **Authentication**
-   - Owner Signup with `bcryptjs` password hashing (salt rounds = 10)
-   - Simulated email verification (crypto verification token with 24-hour expiry, logged to server console and testable via `/verify-email`)
-   - Owner Login issuing pair tokens
-   - Access token: 15 minutes, Refresh token: 7 days
-   - Stored in secure `httpOnly`, `sameSite: 'lax'` cookies
-   - Refresh token rotation on `/api/auth/refresh` with reuse detection
-   - Logout revoking stored refresh tokens and clearing cookies
-   - Forgot password & Reset password simulation with 1-hour expiration crypto tokens
-   - Protected owner routes via `authenticateOwner` middleware
+Prerequisites:
 
-2. **Space Management**
-   - Create, edit, configure, and delete Spaces
-   - Unique URL slugs (`/collect/:spaceSlug`)
-   - Brand logo upload
-   - Custom welcome messages and prompt questions
-   - Mandatory client avatar toggle (`Switch`)
-   - 1–5 star rating toggle (`Switch`)
+- Node.js 18 or newer
+- npm
+- MongoDB running locally, or another reachable MongoDB deployment
 
-3. **Public Testimonial Collection (`/collect/:spaceSlug`)**
-   - Public clients do **NOT** need an account
-   - Client name, email, company/role
-   - 1–5 star rating selector
-   - Review text
-   - Avatar image upload (mandatory if space configured)
-   - Client-side and server-side validation
-   - Confetti celebration and success card on submission
+From the repository root, run the root install script:
 
-4. **Review Moderation**
-   - Tabbed filtering: `All`, `Pending`, `Approved`, `Archived`
-   - Owner actions: `Approve`, `Reject`, `Archive`, `Mark Featured`, `Mark Liked`, `Delete`
-   - Keyword search filter (searches name, email, company, and review text)
-   - Star rating dropdown filter (All, 5★, 4★, 3★, 2★, 1★)
-
-5. **Wall of Love (`/wall/:spaceSlug`)**
-   - Public standalone view
-   - Responsive masonry-style multi-column layout
-   - Displays approved testimonials with avatars, verified client badges, and featured badges
-   - "Leave a Testimonial" CTA button
-
-6. **Embed Generator**
-   - Accessible modal in space dashboard
-   - Theme customization: Light mode and Dark mode
-   - Layout switcher: `Grid`, `Carousel`, and `Badge`
-   - Live interactive preview
-   - One-click copyable `<iframe>` HTML snippet for embedding on any website
-
-7. **Rating Metrics**
-   - Average star score calculation
-   - Total reviews count
-   - Star distribution breakdown (5★ down to 1★ counts, percentages, and visual progress bars)
-   - Status counters (pending reviews awaiting moderation)
-
----
-
-## Quick Start
-
-### 1. Prerequisites
-- Node.js v18+ or v20+
-- MongoDB running locally on `mongodb://127.0.0.1:27017`
-
-### 2. Install Dependencies
 ```bash
 npm run install:all
 ```
 
-### 3. Run Dev Servers (Client + Server Concurrently)
+This runs `npm install` in the root, `server`, and `client` directories.
+
+## How to Configure Environment Variables
+
+Copy the example files to `.env` files. In PowerShell, from the repository root:
+
+```powershell
+Copy-Item server/.env.example server/.env
+Copy-Item client/.env.example client/.env
+```
+
+Configure the following variables from the example templates.
+
+### Server variables
+
+- `PORT` - Backend port. The example uses `5000`.
+- `NODE_ENV` - Runtime environment.
+- `CLIENT_URL` - Frontend origin used for CORS and simulated email links.
+- `MONGODB_URI` - MongoDB connection URI.
+- `ACCESS_TOKEN_SECRET` - JWT access-token signing secret.
+- `REFRESH_TOKEN_SECRET` - JWT refresh-token signing secret.
+- `CLOUDINARY_CLOUD_NAME` - Optional Cloudinary cloud name.
+- `CLOUDINARY_API_KEY` - Optional Cloudinary API key.
+- `CLOUDINARY_API_SECRET` - Optional Cloudinary API secret.
+
+### Client variables
+
+- `VITE_API_URL` - Backend API base URL.
+
+Fill in secret values locally and never commit `.env` files, credentials, or API keys to GitHub. The Cloudinary variables may be left empty; the server then uses local disk storage for uploads.
+
+## How to Run the Project Locally
+
+Start MongoDB, configure both `.env` files, and then run both development servers from the repository root:
+
 ```bash
 npm run dev
 ```
-- Frontend will be live at: `http://localhost:5173`
-- Backend API will be live at: `http://localhost:5000`
 
-### 4. Run Automated Assessment Test Suites
+The root `dev` script runs the server and client concurrently. With the example configuration, the URLs are:
+
+- Frontend: `http://localhost:5173`
+- Backend API: `http://localhost:5000`
+- Health check: `http://localhost:5000/api/health`
+
+To run the applications separately, use the existing root scripts:
+
 ```bash
-# Auth and Security Verification Test
-node server/test-auth.js
-
-# Complete End-to-End System Test (All 18 requirements)
-node server/test-full-e2e.js
+npm run server
+npm run client
 ```
 
----
+The server package also provides `npm start`. The client package provides `npm run build` and `npm run preview`.
 
-## Project Structure
+## Database Setup
 
-```
-testimonial-social-proof-collector/
-├── package.json                   # Root orchestrator
-├── README.md
-├── server/                        # Backend Node.js / Express
-│   ├── server.js                  # Entry point
-│   ├── test-auth.js               # Automated auth test suite
-│   ├── test-full-e2e.js           # Automated end-to-end test suite
-│   └── src/
-│       ├── config/                # DB, constants, cloudinary
-│       ├── controllers/           # Auth, Space, Testimonial, Public
-│       ├── middleware/            # Auth, Upload, Error
-│       ├── models/                # User, Space, Testimonial
-│       ├── routes/                # Auth, Space, Testimonial, Public
-│       └── utils/                 # Token, EmailSimulator, Slugify
-└── client/                        # Frontend React / Vite
-    ├── src/
-    │   ├── api/                   # Axios client + API modules
-    │   ├── components/            # Coss UI primitives, Layout, Modals
-    │   ├── context/               # AuthContext, ToastContext
-    │   └── pages/
-    │       ├── auth/              # Login, Signup, Verify, Forgot, Reset
-    │       ├── dashboard/         # DashboardHome, SpaceDashboard
-    │       └── public/            # PublicCollect, PublicWall, EmbedWidget
-```
+Start a local MongoDB service before starting the backend. The server reads `MONGODB_URI` and the example configuration points to MongoDB on `127.0.0.1:27017` using the `testimonial_collector` database.
+
+No migration or seed command is included. Mongoose creates the application collections as data is written. A hosted MongoDB deployment can also be used by setting `MONGODB_URI` to its reachable connection URI.
+
+## Assumptions / Limitations
+
+- Email verification and password reset are simulated. The application returns or logs the generated links instead of sending email through an external provider.
+- New public testimonials are stored with `pending` status and require owner moderation before appearing on the public wall or embed widget.
+- Uploaded images use local disk storage unless Cloudinary is fully configured; the server falls back to local storage if a Cloudinary upload fails.
+- The included test programs use port `5000` and require MongoDB. Run them from the repository root with `node server/test-auth.js` and `node server/test-full-e2e.js`.
