@@ -1,0 +1,14 @@
+{
+  "name": "testimonial-social-proof-collector",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run server --prefix server\" \"npm run dev --prefix client\"",
+    "server": "npm run server --prefix server",
+    "client": "npm run dev --prefix client",
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
