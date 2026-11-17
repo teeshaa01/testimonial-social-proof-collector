@@ -60,6 +60,16 @@ app.use('/api/spaces', spaceRoutes);
 app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/public', publicRoutes);
 
+// Serve frontend static build in production
+if (process.env.NODE_ENV === 'production') {
+  const clientDist = path.join(__dirname, '../client/dist');
+  app.use(express.static(clientDist));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
+  });
+}
+
 // Centralized error handling
 app.use(errorHandler);
 

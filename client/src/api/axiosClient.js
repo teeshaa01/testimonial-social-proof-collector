@@ -24,6 +24,12 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
+// Keep cookies enabled even when a request supplies its own config.
+axiosClient.interceptors.request.use((config) => {
+  config.withCredentials = true;
+  return config;
+});
+
 // Response interceptor to handle token refresh automatically
 axiosClient.interceptors.response.use(
   (response) => response,
@@ -53,7 +59,7 @@ axiosClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await axiosClient.post('/auth/refresh');
+        await axiosClient.post('/auth/refresh', undefined, { withCredentials: true });
         processQueue(null);
         return axiosClient(originalRequest);
       } catch (refreshError) {
