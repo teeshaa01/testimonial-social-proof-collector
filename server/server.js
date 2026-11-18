@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const dotenv = require('dotenv');
 
+dotenv.config({ path: path.join(__dirname, '.env') });
 dotenv.config();
 
 const connectDB = require('./src/config/db');
